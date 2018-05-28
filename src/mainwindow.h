@@ -85,6 +85,8 @@ private:
     QString checkBaudRate(void);
     QString checkIdType(void);
     QByteArray checkId(void);
+    QByteArray reverseId(QByteArray id);
+    QByteArray wiegandId(QByteArray id);
 
     Ui::MainWindow *ui;
     mf1ics50WriteBlock *wbDialog;
@@ -100,6 +102,7 @@ private:
 
     QByteArray oldTag, newTag;
     QString keyA, keyB, keyConfirm;
+    QByteArray revTag, wiegandTag, wiegandReverseTag;
 
     int outputSeperatorLength;
 

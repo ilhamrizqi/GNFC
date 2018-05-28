@@ -1091,6 +1091,35 @@ QByteArray MainWindow::checkId()
     return res;
 }
 
+QByteArray MainWindow::reverseId(QByteArray id)
+{
+    QByteArray result;
+    int i;
+
+    result.resize(0);
+    for(i = id.size()-1; i>=0; --i)
+    {
+        result.append(id[i]);
+    }
+
+    return result;
+}
+
+QByteArray MainWindow::wiegandId(QByteArray id)
+{
+    QByteArray result;
+    int i;
+
+    result.resize(1);
+    result[0] = id[0] && 0x7F;
+    for(i = 1; i < id.size(); i++)
+    {
+        result.append(id[i]);
+    }
+
+    return result;
+}
+
 bool MainWindow::isNewTag()
 {
     newTag = checkId();
@@ -1154,6 +1183,9 @@ void MainWindow::readId()
             }
 
             qDebug() <<"Target Found.";
+            revTag = reverseId(newTag);
+            wiegandTag = wiegandId(newTag);
+            wiegandReverseTag = reverseId(wiegandTag);
             if(ui->checkBoxVerbos->isChecked()){
                 char *s;
                 str_nfc_target(&s, &nt, true);
@@ -1162,13 +1194,28 @@ void MainWindow::readId()
             }else{
                 QString f = ui->idFormat->checkedButton()->objectName();
                 if( f == "decRB"){
-                    bool ok;
+                    bool ok;                    
+                    ui->outputText->append("Normal Bytes:");
                     ui->outputText->append(QString::number(QString(newTag.toHex().toUpper()).toULongLong(&ok, 16)));
+                    ui->outputText->append("Reverse Bytes:");
+                    ui->outputText->append(QString::number(QString(revTag.toHex().toUpper()).toULongLong(&ok, 16)));
+                    ui->outputText->append("Wiegand32 Bytes:");
+                    ui->outputText->append(QString::number(QString(wiegandTag.toHex().toUpper()).toULongLong(&ok, 16)));
+                    ui->outputText->append("Wiegand32 Reverse Bytes:");
+                    ui->outputText->append(QString::number(QString(wiegandReverseTag.toHex().toUpper()).toULongLong(&ok, 16)));
                     qDebug() << QString(newTag.toHex().toUpper());
                     qDebug() << QString(newTag.toHex().toUpper()).toULongLong(&ok, 16);
                 }else if(f == "hexRB"){
+                    ui->outputText->append("Normal Bytes:");
                     ui->outputText->append(QString(newTag.toHex().toUpper()));
+                    ui->outputText->append("Reverse Bytes:");
+                    ui->outputText->append(QString(revTag.toHex().toUpper()));
+                    ui->outputText->append("Wiegand32 Bytes:");
+                    ui->outputText->append(QString(wiegandTag.toHex().toUpper()));
+                    ui->outputText->append("Wiegand32 Reverse Bytes:");
+                    ui->outputText->append(QString(wiegandReverseTag.toHex().toUpper()));
                 }
+            ui->outputText->append("==========");
             }
             beep();
         }else{
@@ -1222,6 +1269,10 @@ void MainWindow::readId()
         }
 
         sysLog("Target Found.");
+        revTag = reverseId(newTag);
+        wiegandTag = wiegandId(newTag);
+        wiegandReverseTag = reverseId(wiegandTag);
+
         if(ui->checkBoxVerbos->isChecked()){
             char *s;
             str_nfc_target(&s, &nt, true);
