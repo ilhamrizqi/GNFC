@@ -32,8 +32,8 @@ FORMS    += mainwindow.ui \
 }
 
 win32 {
-    INCLUDEPATH += "C:\libnfc\include" "C:\libfreefare\include\freefare" "C:\libndef\include"
-    LIBS += -L"C:\libnfc\lib" -L"C:\libfreefare\lib" -L"C:\libndef\lib"
-    LIBS += -lnfc -lfreefare -lllcp -lndef1 -lws2_32
+    INCLUDEPATH += "C:\libnfc\include" "C:\libfreefare\include\freefare" "C:\libndef\include" "C:\libllcp\include" "D:\repo\nfc\libndef-1.2.0\include"
+    LIBS += -L"C:\libnfc\bin" -llibnfc -L"C:\libfreefare\bin" -llibfreefare -L"C:\libndef" -lndef1 -L"C:\libllcp\bin" -llibllcp
+    LIBS += -lws2_32
 }
 
